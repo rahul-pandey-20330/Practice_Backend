@@ -16,7 +16,40 @@ app.post("/note", async (req,res)=>{
 })
 
 // now hm ab read krenge
-app.get("/note",(req,res)=>{
-    
+app.get("/note",async (req,res)=>{
+    const notes = await noteModel.find()
+    res.status(200).json({
+        message : "Responce Fetch Sucessfully",
+        notes : notes
+    })
 })
+// now we gonna start to update aur note and for that we are using patch method
+app.patch("/note/:id",async (req,res)=>{
+
+    console.log("ID:", req.params.id);
+    console.log("BODY:", req.body);
+
+ const updatedNote = await noteModel.findByIdAndUpdate(
+    req.params.id,
+    req.body,
+    {new : true}
+)
+res.status(200).json({message : "Updates Sucessfully",
+updatedNote : updatedNote
+
+})
+})
+// Delete ke liye
+app.delete("/note/:id",async (req,res)=>{
+    const noteId = await noteModel.findByIdAndDelete(
+        req.params.id,
+        req.body,
+        {new : true}
+    )
+    res.status(200).json({
+        meassage :"note deleted Compleated",
+        noteId : noteId
+    })
+}
+)
 module.exports = app
